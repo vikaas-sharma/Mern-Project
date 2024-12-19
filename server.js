@@ -1,35 +1,21 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+const bcrypt = require("bcrypt");
+const dotenv =require('dotenv');
+const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const { connectdB } = require("./config/db");
-const path = require("path");
+const {connectdB}=require("./config/db")
 
-// Load environment variables
 dotenv.config();
-
-// Connect to the database
+//DB connection
 connectdB();
-
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = 8080;
+const SECRET_KEY = "hactivespace"; // Use environment variables in production.
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use('/api/v1/auth', require('./routes/userRoute'));
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, './client/dist')));
-
-// Fallback route for serving `index.html` for all other requests
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './client/dist/index.html'));
-});
-
-// Start the server
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+app.use('/api/v1/auth',require('./routes/userRoute'))
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
